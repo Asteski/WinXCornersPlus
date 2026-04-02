@@ -1,0 +1,50 @@
+{
+  "HotCornersEnabled": true,
+  "TopLeftActionId": "lock-screen",
+  "TopRightActionId": "hide-other-windows",
+  "BottomLeftActionId": "all-windows",
+  "BottomRightActionId": "action-center",
+  "StartWithWindows": false,
+  "IgnoreFullScreen": true,
+  "AlwaysRunAsAdministrator": false,
+  "AlwaysHideTrayIcon": false,
+  "FlyoutAnimationDirection": 1,
+  "GlobalDelayEnabled": false,
+  "GlobalDelayIndex": 3,
+  "TopLeftDelayEnabled": false,
+  "TopLeftDelayIndex": 3,
+  "TopRightDelayEnabled": false,
+  "TopRightDelayIndex": 3,
+  "BottomLeftDelayEnabled": false,
+  "BottomLeftDelayIndex": 3,
+  "BottomRightDelayEnabled": false,
+  "BottomRightDelayIndex": 3,
+  "ShowCountdown": false,
+  "EnableCustomCommands": true,
+  "CustomCommands": [
+    {
+      "Name": "zzzzxx",
+      "Command": "",
+      "Parameters": "",
+      "LaunchHidden": false
+    },
+    {
+      "Name": "",
+      "Command": "",
+      "Parameters": "",
+      "LaunchHidden": false
+    },
+    {
+      "Name": "",
+      "Command": "",
+      "Parameters": "",
+      "LaunchHidden": false
+    },
+    {
+      "Name": "",
+      "Command": "",
+      "Parameters": "",
+      "LaunchHidden": false
+    }
+  ]
+}

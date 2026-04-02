@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WinXCorners.App/WinXCorners.App.csproj" />
+  </Folder>
+</Solution>

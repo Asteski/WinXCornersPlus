@@ -1,0 +1,16 @@
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Debug\net10.0-windows\WinXCorners.App.exe
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Debug\net10.0-windows\WinXCorners.App.deps.json
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Debug\net10.0-windows\WinXCorners.App.runtimeconfig.json
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Debug\net10.0-windows\WinXCorners.App.dll
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Debug\net10.0-windows\WinXCorners.App.pdb
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\obj\Debug\net10.0-windows\WinXCorners.App.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\obj\Debug\net10.0-windows\WinXCorners.App.AssemblyInfoInputs.cache
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\obj\Debug\net10.0-windows\WinXCorners.App.AssemblyInfo.cs
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\obj\Debug\net10.0-windows\WinXCorners.App.csproj.CoreCompileInputs.cache
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\obj\Debug\net10.0-windows\WinXCorners.App.sourcelink.json
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\obj\Debug\net10.0-windows\WinXCorners.App.dll
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\obj\Debug\net10.0-windows\refint\WinXCorners.App.dll
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\obj\Debug\net10.0-windows\WinXCorners.App.pdb
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\obj\Debug\net10.0-windows\WinXCorners.App.genruntimeconfig.cache
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\obj\Debug\net10.0-windows\ref\WinXCorners.App.dll
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Debug\net10.0-windows\WinXCorners_Icon3.ico
