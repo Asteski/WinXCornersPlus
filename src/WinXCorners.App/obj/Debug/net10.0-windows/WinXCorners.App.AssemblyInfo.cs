@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WinXCornersPlus")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+01e7b77b0320ad7f18ab6d9a98b23b5d3c7e2687")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+65f7ec80370c90e2dc67873453db3902f51e1dbc")]
 [assembly: System.Reflection.AssemblyProductAttribute("WinXCornersPlus")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WinXCornersPlus")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
