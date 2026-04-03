@@ -1,0 +1,50 @@
+{
+  "HotCornersEnabled": true,
+  "TopLeftActionId": "all-windows",
+  "TopRightActionId": "desktop",
+  "BottomLeftActionId": "action-center",
+  "BottomRightActionId": "start-menu",
+  "StartWithWindows": false,
+  "IgnoreFullScreen": true,
+  "AlwaysRunAsAdministrator": false,
+  "AlwaysHideTrayIcon": false,
+  "FlyoutAnimationDirection": 0,
+  "GlobalDelayEnabled": false,
+  "GlobalDelayIndex": 3,
+  "TopLeftDelayEnabled": false,
+  "TopLeftDelayIndex": 3,
+  "TopRightDelayEnabled": false,
+  "TopRightDelayIndex": 3,
+  "BottomLeftDelayEnabled": false,
+  "BottomLeftDelayIndex": 3,
+  "BottomRightDelayEnabled": false,
+  "BottomRightDelayIndex": 3,
+  "ShowCountdown": false,
+  "EnableCustomCommands": false,
+  "CustomCommands": [
+    {
+      "Name": "",
+      "Command": "",
+      "Parameters": "",
+      "LaunchHidden": false
+    },
+    {
+      "Name": "",
+      "Command": "",
+      "Parameters": "",
+      "LaunchHidden": false
+    },
+    {
+      "Name": "",
+      "Command": "",
+      "Parameters": "",
+      "LaunchHidden": false
+    },
+    {
+      "Name": "",
+      "Command": "",
+      "Parameters": "",
+      "LaunchHidden": false
+    }
+  ]
+}

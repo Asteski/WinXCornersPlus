@@ -1,0 +1,12 @@
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\publish\WinXCornersPlus.exe
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\publish\app.ico
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\publish\settings.ico
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\publish\about.ico
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\publish\WinXCorners_Icon3.ico
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\publish\ICON_1.res
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\publish\ICON_2.res
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\publish\ICON_3.res
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\publish\WinXCornersPlus.dll
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\publish\WinXCornersPlus.deps.json
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\publish\WinXCornersPlus.runtimeconfig.json
+C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\publish\WinXCornersPlus.pdb
