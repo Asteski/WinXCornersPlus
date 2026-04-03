@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("WinXCornersPlus")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Asteski")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
+[assembly: System.Reflection.AssemblyDescriptionAttribute("WinXCornersPlus")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+95768f56a54ae91f62dd83f0fce46bd67a1d2dff")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b580b73e0849e59487a99d728b5559bb2d9d645b")]
 [assembly: System.Reflection.AssemblyProductAttribute("WinXCornersPlus")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WinXCornersPlus")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

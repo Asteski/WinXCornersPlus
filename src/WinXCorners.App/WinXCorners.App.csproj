@@ -7,8 +7,11 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>WinXCornersPlus</AssemblyName>
+    <Company>Asteski</Company>
     <Product>WinXCornersPlus</Product>
     <Title>WinXCornersPlus</Title>
+    <Description>WinXCornersPlus</Description>
+    <Publisher>Asteski</Publisher>
     <ApplicationIcon>..\..\assets\app.ico</ApplicationIcon>
   </PropertyGroup>
 

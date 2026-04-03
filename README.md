@@ -11,7 +11,7 @@ WinXCornersPlus is a lightweight utility for Windows 10 and Windows 11 that enha
     - **Hide Other Windows**: Minimize all windows and keep the currently focused window in view.
     - **Lock Screen**: Lock your screen.
     - **Notification Center**: Open the Notification Center.
-    - **Settings**: Open System Settings.
+    - **System Settings**: Open System Settings.
     - **Show All Windows**: Activate Windows Task View to manage your open applications.
     - **Show Desktop**: Minimize all windows to show the desktop.
     - **Start Menu**: Open the Start Menu.

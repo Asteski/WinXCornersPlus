@@ -273,7 +273,7 @@ public partial class Form1 : Form
         var builtInItems = new List<(string text, string actionId)>
         {
             ("File Explorer", "file-explorer"),
-            ("Settings", "settings"),
+            ("System Settings", "settings"),
             ("Task Manager", "task-manager"),
             ("Show All Windows", "all-windows"),
             ("Show Desktop", "desktop"),
@@ -479,7 +479,7 @@ public partial class Form1 : Form
         {
             "none" => string.Empty,
             "file-explorer" => "File Explorer",
-            "settings" => "Settings",
+            "settings" => "System Settings",
             "task-manager" => "Task Manager",
             "screen-saver" => "Screen Saver",
             "hide-other-windows" => "Hide Windows",

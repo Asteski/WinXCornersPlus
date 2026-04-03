@@ -216,7 +216,7 @@ internal sealed class AdvancedForm : Form
             _chkShowCountdown
         ]);
 
-        _chkStartWithWindows = CreateCheckBox("Start WinXCornersPlus on startup", new Point(16, 19));
+        _chkStartWithWindows = CreateCheckBox("Run at startup", new Point(16, 19));
         _chkFullScreen = CreateCheckBox("Do nothing on Full Screen", new Point(16, 47));
         _chkAlwaysRunAsAdministrator = CreateCheckBox("Always run as administrator", new Point(16, 75));
         _chkAlwaysHideTrayIcon = CreateCheckBox("Always hide tray icon", new Point(16, 103));
