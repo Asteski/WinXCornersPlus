@@ -22,9 +22,8 @@ public partial class Form1 : Form
         OriginalLegacy
     }
 
-    private const int FlyoutCornerRadius = 7;
-    private const int FlyoutBorderCornerRadius = FlyoutCornerRadius - 1;
     private const int MonitorTileCornerRadius = 6;
+    private const int FlyoutCornerRadius = MonitorTileCornerRadius;
     private const int HotCornerActivationSize = 1;
     private const int HotCornerRearmReleaseSize = 32;
     private static readonly TimeSpan FlyoutAnimationDuration = TimeSpan.FromMilliseconds(220);
@@ -98,11 +97,17 @@ public partial class Form1 : Form
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             e.Graphics.PixelOffsetMode = PixelOffsetMode.Half;
+
+            var bounds = GetFlyoutBounds();
+            using var backgroundPath = RoundedRectangleGeometry.CreatePath(bounds, FlyoutCornerRadius);
+            using var backgroundBrush = new SolidBrush(ThemeHelper.Colors.GetFlyoutBackgroundColor());
+            e.Graphics.FillPath(backgroundBrush, backgroundPath);
+
             using var pen = new Pen(ThemeHelper.Colors.GetFlyoutBorderColor(), 1f)
             {
                 Alignment = PenAlignment.Inset
             };
-            using var borderPath = CreateRoundedRectanglePath(new RectangleF(1f, 1f, Width - 3f, Height - 3f), FlyoutBorderCornerRadius);
+            using var borderPath = RoundedRectangleGeometry.CreatePath(bounds, FlyoutCornerRadius);
             e.Graphics.DrawPath(pen, borderPath);
         };
         UpdateFlyoutRegion();
@@ -324,32 +329,16 @@ public partial class Form1 : Form
             return;
         }
 
-        using var path = CreateRoundedRectanglePath(new RectangleF(0f, 0f, Width - 1f, Height - 1f), FlyoutCornerRadius);
+        using var path = RoundedRectangleGeometry.CreatePath(GetFlyoutBounds(), FlyoutCornerRadius);
         var updatedRegion = new Region(path);
         var previousRegion = Region;
         Region = updatedRegion;
         previousRegion?.Dispose();
     }
 
-    private static GraphicsPath CreateRoundedRectanglePath(RectangleF bounds, int radius)
+    private RectangleF GetFlyoutBounds()
     {
-        var path = new GraphicsPath();
-        if (bounds.Width <= 0 || bounds.Height <= 0)
-        {
-            return path;
-        }
-
-        var diameter = Math.Max(1f, radius * 2f);
-        var arc = new RectangleF(bounds.Location, new SizeF(diameter, diameter));
-        path.AddArc(arc, 180, 90);
-        arc.X = bounds.Right - diameter;
-        path.AddArc(arc, 270, 90);
-        arc.Y = bounds.Bottom - diameter;
-        path.AddArc(arc, 0, 90);
-        arc.X = bounds.Left;
-        path.AddArc(arc, 90, 90);
-        path.CloseFigure();
-        return path;
+        return new RectangleF(1.5f, 1.5f, Width - 3f, Height - 3f);
     }
 
     private void LayoutCornerButtons()

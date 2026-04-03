@@ -3,6 +3,31 @@ using System.Drawing.Drawing2D;
 
 namespace WinXCorners.App;
 
+internal static class RoundedRectangleGeometry
+{
+    internal static GraphicsPath CreatePath(RectangleF rect, int radius)
+    {
+        var path = new GraphicsPath();
+        var diameter = Math.Max(1f, radius * 2f);
+        var arc = new RectangleF(rect.Location, new SizeF(diameter, diameter));
+
+        path.AddArc(arc, 180, 90);
+        arc.X = rect.Right - diameter;
+        path.AddArc(arc, 270, 90);
+        arc.Y = rect.Bottom - diameter;
+        path.AddArc(arc, 0, 90);
+        arc.X = rect.Left;
+        path.AddArc(arc, 90, 90);
+        path.CloseFigure();
+        return path;
+    }
+
+    internal static GraphicsPath CreatePath(Rectangle rect, int radius)
+    {
+        return CreatePath(new RectangleF(rect.X, rect.Y, rect.Width, rect.Height), radius);
+    }
+}
+
 internal sealed class FlyoutActionControl : Control
 {
     private bool _hovered;
@@ -76,7 +101,7 @@ internal sealed class FlyoutActionControl : Control
         var border = ThemeHelper.Colors.GetFlyoutBorderColor();
         var rect = new Rectangle(0, 0, Width - 1, Height - 1);
 
-        using var path = CreateRoundRect(rect, 5);
+        using var path = RoundedRectangleGeometry.CreatePath(rect, 5);
         using var brush = new SolidBrush(fill);
         using var pen = new Pen(border);
         e.Graphics.FillPath(brush, path);
@@ -102,17 +127,6 @@ internal sealed class FlyoutActionControl : Control
         ]);
     }
 
-    private static GraphicsPath CreateRoundRect(Rectangle rect, int radius)
-    {
-        var path = new GraphicsPath();
-        var diameter = radius * 2;
-        path.AddArc(rect.X, rect.Y, diameter, diameter, 180, 90);
-        path.AddArc(rect.Right - diameter, rect.Y, diameter, diameter, 270, 90);
-        path.AddArc(rect.Right - diameter, rect.Bottom - diameter, diameter, diameter, 0, 90);
-        path.AddArc(rect.X, rect.Bottom - diameter, diameter, diameter, 90, 90);
-        path.CloseFigure();
-        return path;
-    }
 }
 
 internal sealed class AccentTileControl : Control
@@ -177,7 +191,7 @@ internal sealed class AccentTileControl : Control
         e.Graphics.PixelOffsetMode = PixelOffsetMode.Half;
 
         var rect = new RectangleF(0.5f, 0.5f, Width - 1f, Height - 1f);
-        using var path = CreateRoundRect(rect, CornerRadius);
+        using var path = RoundedRectangleGeometry.CreatePath(rect, CornerRadius);
         using var brush = new SolidBrush(AccentColor);
         e.Graphics.FillPath(brush, path);
 
@@ -188,23 +202,6 @@ internal sealed class AccentTileControl : Control
             Rectangle.Ceiling(rect),
             ForeColor,
             TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine);
-    }
-
-    private static GraphicsPath CreateRoundRect(RectangleF rect, int radius)
-    {
-        var path = new GraphicsPath();
-        var diameter = Math.Max(1f, radius * 2f);
-        var arc = new RectangleF(rect.Location, new SizeF(diameter, diameter));
-
-        path.AddArc(arc, 180, 90);
-        arc.X = rect.Right - diameter;
-        path.AddArc(arc, 270, 90);
-        arc.Y = rect.Bottom - diameter;
-        path.AddArc(arc, 0, 90);
-        arc.X = rect.Left;
-        path.AddArc(arc, 90, 90);
-        path.CloseFigure();
-        return path;
     }
 }
 
