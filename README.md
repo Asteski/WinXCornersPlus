@@ -44,7 +44,7 @@ WinXCornersPlus is a lightweight utility for Windows 10 and Windows 11 that enha
 1. Launch WinXCornersPlus popup window from the system tray icon.
 2. Configure your preferred actions for each corner.
 3. Hover your mouse cursor over a corner to trigger the assigned action.
-4. Right click the WinXCornersPlus tray icon and select *Settings* to open the more advanced options.
+4. Right click the WinXCornersPlus tray icon and select *Settings* to configure more advanced settings.
 
 ## <a name="howtohotkey"></a> Custom Hotkeys  <a href="#WinXCornersPlus"></a>
 The hotkeys will be as follows:

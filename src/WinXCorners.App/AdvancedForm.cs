@@ -74,7 +74,7 @@ internal sealed class AdvancedForm : Form
         BackColor = ThemeHelper.Colors.GetSettingsBackgroundColor();
         ForeColor = ThemeHelper.Colors.GetForegroundColor();
         Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
-        Icon = WindowIconLoader.TryLoadSettingsIcon();
+        Icon = WindowIconLoader.TryLoadAppIcon();
 
         var updatesLink = new LinkLabel
         {
@@ -601,7 +601,6 @@ internal sealed class AdvancedForm : Form
 
         return 1;
     }
-
     private FlyoutAnimationDirection GetSelectedFlyoutAnimationDirection()
     {
         var selectedIndex = _cbFlyoutAnimationDirection.SelectedIndex;

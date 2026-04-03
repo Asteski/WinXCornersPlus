@@ -7,9 +7,11 @@ internal static class WindowIconLoader
         return TryLoad("app.ico");
     }
 
-    internal static Icon? TryLoadSettingsIcon()
+    internal static Icon? TryLoadTrayIcon(bool isLightTheme, bool hotCornersEnabled)
     {
-        return TryLoad("settings.ico");
+        var theme = isLightTheme ? "light" : "dark";
+        var state = hotCornersEnabled ? "enabled" : "disabled";
+        return TryLoad(Path.Combine("tray", $"ICON_{theme}_{state}.ico"));
     }
 
     internal static Icon? TryLoadAboutIcon()

@@ -357,6 +357,7 @@ public partial class Form1 : Form
     private void ApplySettings()
     {
         UpdateCornerButtonLabels();
+        UpdateTrayIcon();
         UpdateTrayIconVisibility();
         SettingsStore.Save(_settings);
         UpdateAutorunRegistration();
@@ -1165,15 +1166,25 @@ public partial class Form1 : Form
 
     private void UpdateTrayIcon()
     {
-        var resourceFileName = ThemeHelper.IsLightTheme ? "ICON_3.res" : "ICON_1.res";
-        var resourceIconName = ThemeHelper.IsLightTheme ? "ICON_3" : "ICON_1";
-        var iconPath = Path.Combine(AppContext.BaseDirectory, resourceFileName);
-        var loadedIcon = NativeIconResourceLoader.LoadIconFromResFile(iconPath, resourceIconName);
+        var loadedIcon = WindowIconLoader.TryLoadTrayIcon(ThemeHelper.IsLightTheme, _settings.HotCornersEnabled);
         loadedIcon ??= LoadFallbackTrayIcon();
 
+        var wasVisible = _notifyIcon.Visible;
         var previousIcon = _currentTrayIcon;
         _currentTrayIcon = loadedIcon;
+        if (wasVisible)
+        {
+            _notifyIcon.Visible = false;
+        }
+
+        _notifyIcon.Icon = null;
         _notifyIcon.Icon = loadedIcon;
+
+        if (wasVisible)
+        {
+            _notifyIcon.Visible = true;
+        }
+
         previousIcon?.Dispose();
     }
 
@@ -1299,5 +1310,4 @@ public partial class Form1 : Form
 
     [DllImport("winmm.dll")]
     private static extern uint timeEndPeriod(uint uPeriod);
-
 }
