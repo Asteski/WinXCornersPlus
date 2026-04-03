@@ -1,3 +1,7 @@
+# VS Code settings
+.vscode/
+.vs/
+
 # Compiler-generated binaries (safe to delete)
 *.exe
 *.dll
@@ -17,5 +21,5 @@
 *.o
 *.ocx
 
-.\src\WinXCorners.App\bin\
-.\src\WinXCorners.App\obj\
+./src/WinXCorners.App/bin/
+./src/WinXCorners.App/obj/
