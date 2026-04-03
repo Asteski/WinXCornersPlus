@@ -76,3 +76,9 @@ This will check if Alt+Tab's window is visible, if so, it will hide it, otherwis
 - WinXCornersPlus works seamlessly on your primary monitor but secondary monitors haven't been tested throughfully, consider it partially supported.
 - If you encounter issues with elevated privileges software, try restarting WinXCornersPlus as an administrator specially if you use those kind of elevated privileged software most of the time, otherwise triggering won't work due to the nature of separate privileges. Use *Elevate* option in tray context menu to restart the application into Administrator mode. Go to Settings and activate *Elevated* mode permanently in Advanced tab.
 - If you encounter other unknown issues, please fill a bug report at the GitHub issues page.
+
+## Credits
+
+Original author and developer
+
+* Victor Alberto Gil [@vhanla](https://apps.codigobit.info/) (Author, Developer)
