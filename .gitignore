@@ -3,23 +3,23 @@
 .vs/
 
 # Compiler-generated binaries (safe to delete)
-*.exe
-*.dll
-*.bpl
-*.bpi
-*.dcp
-*.so
-*.apk
-*.drc
-*.map
-*.dres
-*.rsm
-*.tds
-*.dcu
-*.lib
-*.a
-*.o
-*.ocx
+# *.exe
+# *.dll
+# *.bpl
+# *.bpi
+# *.dcp
+# *.so
+# *.apk
+# *.drc
+# *.map
+# *.dres
+# *.rsm
+# *.tds
+# *.dcu
+# *.lib
+# *.a
+# *.o
+# *.ocx
 
 ./src/WinXCorners.App/bin/
 ./src/WinXCorners.App/obj/
