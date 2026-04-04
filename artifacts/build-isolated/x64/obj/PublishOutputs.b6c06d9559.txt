@@ -1,0 +1,5 @@
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\github-release\publish\win-x64\WinXCornersPlus.exe
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\github-release\publish\win-x64\WinXCornersPlus.dll
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\github-release\publish\win-x64\WinXCornersPlus.deps.json
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\github-release\publish\win-x64\WinXCornersPlus.runtimeconfig.json
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\github-release\publish\win-x64\WinXCornersPlus.pdb

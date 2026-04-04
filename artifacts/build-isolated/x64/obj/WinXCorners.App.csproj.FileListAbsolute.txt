@@ -1,0 +1,15 @@
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-isolated\x64\out\WinXCornersPlus.exe
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-isolated\x64\out\WinXCornersPlus.deps.json
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-isolated\x64\out\WinXCornersPlus.runtimeconfig.json
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-isolated\x64\out\WinXCornersPlus.dll
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-isolated\x64\out\WinXCornersPlus.pdb
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-isolated\x64\obj\WinXCorners.App.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-isolated\x64\obj\WinXCorners.App.AssemblyInfoInputs.cache
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-isolated\x64\obj\WinXCorners.App.AssemblyInfo.cs
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-isolated\x64\obj\WinXCorners.App.csproj.CoreCompileInputs.cache
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-isolated\x64\obj\WinXCorners.App.sourcelink.json
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-isolated\x64\obj\WinXCornersPlus.dll
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-isolated\x64\obj\refint\WinXCornersPlus.dll
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-isolated\x64\obj\WinXCornersPlus.pdb
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-isolated\x64\obj\WinXCorners.App.genruntimeconfig.cache
+C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-isolated\x64\obj\ref\WinXCornersPlus.dll

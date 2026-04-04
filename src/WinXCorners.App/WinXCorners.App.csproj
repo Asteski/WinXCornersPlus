@@ -7,50 +7,41 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>WinXCornersPlus</AssemblyName>
+    <Version>1.4.0</Version>
+    <AssemblyVersion>1.4.0.0</AssemblyVersion>
+    <FileVersion>1.4.0.0</FileVersion>
+    <InformationalVersion>1.4.0</InformationalVersion>
     <Company>Asteski</Company>
     <Product>WinXCornersPlus</Product>
     <Title>WinXCornersPlus</Title>
     <Description>WinXCornersPlus</Description>
     <Publisher>Asteski</Publisher>
     <ApplicationIcon>..\..\assets\app.ico</ApplicationIcon>
+    <ApplicationManifest>WinXCorners.App.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\..\assets\app.ico">
-      <Link>app.ico</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="..\..\assets\about.ico">
-      <Link>about.ico</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="..\..\assets\tray\*.ico">
-      <Link>tray\%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="..\..\WinXCorners_Icon3.ico">
-      <Link>WinXCorners_Icon3.ico</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="..\..\ICON_1.res">
-      <Link>ICON_1.res</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="..\..\ICON_2.res">
-      <Link>ICON_2.res</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="..\..\ICON_3.res">
-      <Link>ICON_3.res</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
+    <None Remove="..\..\assets\app.ico" />
+    <None Remove="..\..\assets\about.ico" />
+    <None Remove="..\..\assets\tray\*.ico" />
+    <None Remove="..\..\WinXCorners_Icon3.ico" />
+    <None Remove="..\..\ICON_1.res" />
+    <None Remove="..\..\ICON_2.res" />
+    <None Remove="..\..\ICON_3.res" />
+    <Content Remove="..\..\assets\app.ico" />
+    <Content Remove="..\..\assets\about.ico" />
+    <Content Remove="..\..\assets\tray\*.ico" />
+    <Content Remove="..\..\WinXCorners_Icon3.ico" />
+    <Content Remove="..\..\ICON_1.res" />
+    <Content Remove="..\..\ICON_2.res" />
+    <Content Remove="..\..\ICON_3.res" />
+    <EmbeddedResource Include="..\..\assets\app.ico" LogicalName="Icons.app.ico" />
+    <EmbeddedResource Include="..\..\assets\about.ico" LogicalName="Icons.about.ico" />
+    <EmbeddedResource Include="..\..\assets\tray\ICON_dark_disabled.ico" LogicalName="Icons.tray.ICON_dark_disabled.ico" />
+    <EmbeddedResource Include="..\..\assets\tray\ICON_dark_enabled.ico" LogicalName="Icons.tray.ICON_dark_enabled.ico" />
+    <EmbeddedResource Include="..\..\assets\tray\ICON_light_disabled.ico" LogicalName="Icons.tray.ICON_light_disabled.ico" />
+    <EmbeddedResource Include="..\..\assets\tray\ICON_light_enabled.ico" LogicalName="Icons.tray.ICON_light_enabled.ico" />
+    <EmbeddedResource Include="..\..\WinXCorners_Icon3.ico" LogicalName="Icons.WinXCorners_Icon3.ico" />
   </ItemGroup>
 
 </Project>

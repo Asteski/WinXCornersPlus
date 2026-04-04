@@ -20,12 +20,6 @@ C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\
 C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\app.ico
 C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\settings.ico
 C:\Users\Adams\Code\winxcorners\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\about.ico
-C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\app.ico
-C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\about.ico
-C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\WinXCorners_Icon3.ico
-C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\ICON_1.res
-C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\ICON_2.res
-C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\ICON_3.res
 C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\obj\Release\net10.0-windows\win-x64\WinXCorners.App.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\obj\Release\net10.0-windows\win-x64\WinXCorners.App.AssemblyInfoInputs.cache
 C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\obj\Release\net10.0-windows\win-x64\WinXCorners.App.AssemblyInfo.cs
@@ -41,7 +35,3 @@ C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\obj\Release\net10.0-wind
 C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\obj\Release\net10.0-windows\win-x64\refint\WinXCornersPlus.dll
 C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\obj\Release\net10.0-windows\win-x64\WinXCornersPlus.pdb
 C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\obj\Release\net10.0-windows\win-x64\ref\WinXCornersPlus.dll
-C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\tray\ICON_dark_disabled.ico
-C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\tray\ICON_dark_enabled.ico
-C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\tray\ICON_light_disabled.ico
-C:\Users\Adams\Code\WinXCornersPlus\src\WinXCorners.App\bin\Release\net10.0-windows\win-x64\tray\ICON_light_enabled.ico

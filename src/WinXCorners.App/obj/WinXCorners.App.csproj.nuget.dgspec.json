@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\Adams\\Code\\WinXCornersPlus\\src\\WinXCorners.App\\WinXCorners.App.csproj": {
-      "version": "1.0.0",
+      "version": "1.4.0",
       "restore": {
         "projectUniqueName": "C:\\Users\\Adams\\Code\\WinXCornersPlus\\src\\WinXCorners.App\\WinXCorners.App.csproj",
         "projectName": "WinXCornersPlus",
@@ -359,11 +359,6 @@
             "System.Xml.XPath": "(,4.3.32767]",
             "System.Xml.XPath.XDocument": "(,5.0.32767]"
           }
-        }
-      },
-      "runtimes": {
-        "win-x64": {
-          "#import": []
         }
       }
     }

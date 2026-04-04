@@ -23,6 +23,8 @@ static class Program
         // see https://aka.ms/applicationconfiguration.
         ApplicationConfiguration.Initialize();
 
+        Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+
         using var singleInstanceMutex = new System.Threading.Mutex(true, SingleInstanceMutexName, out var createdNew);
         if (!createdNew)
         {

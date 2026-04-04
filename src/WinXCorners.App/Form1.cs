@@ -68,6 +68,7 @@ public partial class Form1 : Form
     private TaskbarEdge _animationEdge = TaskbarEdge.Bottom;
     private bool _highResolutionTimerRequested;
     private bool _animationFrameQueued;
+    private bool _trayIconRefreshQueued;
 
     internal Form1(ApplicationSettings? initialSettings = null)
     {
@@ -1166,32 +1167,51 @@ public partial class Form1 : Form
 
     private void UpdateTrayIcon()
     {
+        AppLogger.Log($"UpdateTrayIcon called. HotCornersEnabled: {_settings.HotCornersEnabled}");
+        if (!IsHandleCreated || Disposing || IsDisposed)
+        {
+            ApplyTrayIcon();
+            return;
+        }
+
+        if (_trayIconRefreshQueued)
+        {
+            return;
+        }
+
+        _trayIconRefreshQueued = true;
+        BeginInvoke(new Action(() =>
+        {
+            _trayIconRefreshQueued = false;
+
+            if (IsDisposed || Disposing)
+            {
+                return;
+            }
+
+            ApplyTrayIcon();
+        }));
+    }
+
+    private void ApplyTrayIcon()
+    {
         var loadedIcon = WindowIconLoader.TryLoadTrayIcon(ThemeHelper.IsLightTheme, _settings.HotCornersEnabled);
-        loadedIcon ??= LoadFallbackTrayIcon();
+        var logMessage = $"Loaded icon: {(loadedIcon != null ? "Success" : "Fallback")}, Theme: {(ThemeHelper.IsLightTheme ? "Light" : "Dark")}, HotCornersEnabled: {_settings.HotCornersEnabled}";
+        File.AppendAllText("tray_icon_debug.log", logMessage + Environment.NewLine);
+        AppLogger.Log(logMessage);
+        loadedIcon ??= WindowIconLoader.LoadFallbackTrayIcon();
 
         var wasVisible = _notifyIcon.Visible;
         var previousIcon = _currentTrayIcon;
         _currentTrayIcon = loadedIcon;
-        if (wasVisible)
-        {
-            _notifyIcon.Visible = false;
-        }
 
+        // Explicitly reset the NotifyIcon properties to force a refresh
+        _notifyIcon.Visible = false;
         _notifyIcon.Icon = null;
         _notifyIcon.Icon = loadedIcon;
-
-        if (wasVisible)
-        {
-            _notifyIcon.Visible = true;
-        }
+        _notifyIcon.Visible = wasVisible;
 
         previousIcon?.Dispose();
-    }
-
-    private static Icon LoadFallbackTrayIcon()
-    {
-        var iconPath = Path.Combine(AppContext.BaseDirectory, "WinXCorners_Icon3.ico");
-        return File.Exists(iconPath) ? new Icon(iconPath) : SystemIcons.Application;
     }
 
     private void HideFlyoutIfNeeded()
