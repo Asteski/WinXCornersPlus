@@ -23,7 +23,7 @@ internal static class WindowIconLoader
 
     internal static Icon LoadFallbackTrayIcon()
     {
-        return TryLoadEmbedded("WinXCorners_Icon3.ico") ?? TryLoadAppIcon() ?? SystemIcons.Application;
+        return TryLoadEmbedded("WinXCornersPlus.ico") ?? TryLoadAppIcon() ?? SystemIcons.Application;
     }
 
     private static Icon? TryLoadEmbedded(string resourceName)
