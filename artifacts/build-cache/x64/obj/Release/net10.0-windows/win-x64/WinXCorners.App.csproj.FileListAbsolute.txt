@@ -1,5 +1,0 @@
-C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-cache\x64\obj\Release\net10.0-windows\win-x64\WinXCorners.App.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-cache\x64\obj\Release\net10.0-windows\win-x64\WinXCorners.App.AssemblyInfoInputs.cache
-C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-cache\x64\obj\Release\net10.0-windows\win-x64\WinXCorners.App.AssemblyInfo.cs
-C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-cache\x64\obj\Release\net10.0-windows\win-x64\WinXCorners.App.csproj.CoreCompileInputs.cache
-C:\Users\Adams\Code\WinXCornersPlus\artifacts\build-cache\x64\obj\Release\net10.0-windows\win-x64\WinXCorners.App.sourcelink.json
