@@ -21,9 +21,8 @@ static class Program
 
         // To customize application configuration such as set high DPI settings or default font,
         // see https://aka.ms/applicationconfiguration.
-        ApplicationConfiguration.Initialize();
-
         Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+        ApplicationConfiguration.Initialize();
 
         using var singleInstanceMutex = new System.Threading.Mutex(true, SingleInstanceMutexName, out var createdNew);
         if (!createdNew)

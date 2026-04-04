@@ -47,6 +47,9 @@ internal sealed class AdvancedForm : Form
     private bool _suppressDirtyTracking;
     private int _selectedTopSectionTab;
     private int _selectedCommandIndex = -1;
+    private double _scaleFactor = 1.0;
+    private Size _baseClientSize = Size.Empty;
+    private readonly Dictionary<Control, Rectangle> _baseControlBounds = new();
 
     private static readonly (string Text, FlyoutAnimationDirection Value)[] FlyoutAnimationDirections =
     [
@@ -64,7 +67,7 @@ internal sealed class AdvancedForm : Form
         Settings = settings.Clone();
         HandleCreated += (_, _) => ThemeHelper.ApplyNativeWindowTheme(Handle);
 
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleMode = AutoScaleMode.Dpi;
         ClientSize = new Size(438, 452);
         FormBorderStyle = FormBorderStyle.FixedSingle;
         MaximizeBox = false;
@@ -365,6 +368,15 @@ internal sealed class AdvancedForm : Form
         CancelButton = btnCancel;
         Controls.AddRange(new Control[] { updatesLink, betaLabel, btnOk, _btnApply, btnCancel, topTabsHost, _topSectionHost, tabsHost, customPanel });
 
+        // capture base bounds and font sizes for controls so we can scale positions/sizes/fonts at runtime
+        _baseClientSize = ClientSize;
+        foreach (var c in GetAllControls(this))
+        {
+            _baseControlBounds[c] = c.Bounds;
+        }
+
+        ApplyScalingForCurrentDpi();
+
         HookDirtyTracking();
 
         LoadFromSettings();
@@ -396,6 +408,90 @@ internal sealed class AdvancedForm : Form
         UpdateDelayState();
         _suppressDirtyTracking = false;
         SetDirty(false);
+    }
+
+    protected override void WndProc(ref Message m)
+    {
+        const int wmDpiChanged = 0x02E0;
+        if (m.Msg == wmDpiChanged)
+        {
+            ApplyScalingForCurrentDpi();
+        }
+
+        base.WndProc(ref m);
+    }
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern int GetDpiForWindow(IntPtr hwnd);
+
+    private double GetCurrentScaleFactor()
+    {
+        try
+        {
+            if (IsHandleCreated)
+            {
+                var dpi = GetDpiForWindow(Handle);
+                if (dpi > 0)
+                {
+                    return dpi / 96.0;
+                }
+            }
+        }
+        catch
+        {
+            // fallback
+        }
+
+        using var g = CreateGraphics();
+        return g.DpiX / 96.0;
+    }
+
+    private void ApplyScalingForCurrentDpi()
+    {
+        var scale = GetCurrentScaleFactor();
+        if (Math.Abs(scale - _scaleFactor) < 0.01)
+        {
+            return;
+        }
+
+        _scaleFactor = scale;
+
+        if (_baseClientSize == Size.Empty)
+        {
+            _baseClientSize = ClientSize;
+        }
+
+        ClientSize = new Size((int)Math.Round(_baseClientSize.Width * _scaleFactor), (int)Math.Round(_baseClientSize.Height * _scaleFactor));
+
+        // scale child controls positions and sizes proportionally (do not scale fonts)
+        foreach (var kvp in _baseControlBounds)
+        {
+            var control = kvp.Key;
+            var bounds = kvp.Value;
+            control.Bounds = new Rectangle(
+                (int)Math.Round(bounds.X * _scaleFactor),
+                (int)Math.Round(bounds.Y * _scaleFactor),
+                (int)Math.Round(bounds.Width * _scaleFactor),
+                (int)Math.Round(bounds.Height * _scaleFactor));
+        }
+    }
+
+    private static IEnumerable<Control> GetAllControls(Control root)
+    {
+        var list = new List<Control>();
+        var stack = new Stack<Control>();
+        stack.Push(root);
+        while (stack.Count > 0)
+        {
+            var c = stack.Pop();
+            list.Add(c);
+            foreach (Control child in c.Controls)
+            {
+                stack.Push(child);
+            }
+        }
+
+        return list;
     }
 
     private void SaveAndClose()

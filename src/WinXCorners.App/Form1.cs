@@ -69,6 +69,11 @@ public partial class Form1 : Form
     private bool _highResolutionTimerRequested;
     private bool _animationFrameQueued;
     private bool _trayIconRefreshQueued;
+    private double _scaleFactor = 1.0;
+    private Size _baseClientSize = Size.Empty;
+    private Size _baseMonitorTileSize = Size.Empty;
+    private Size _baseCornerButtonSize = Size.Empty;
+    
 
     internal Form1(ApplicationSettings? initialSettings = null)
     {
@@ -175,6 +180,14 @@ public partial class Form1 : Form
             _monitorTile
         ]);
 
+        // Capture base sizes and fonts for later scaling
+        _baseClientSize = ClientSize;
+        _baseMonitorTileSize = _monitorTile.Size;
+        _baseCornerButtonSize = _topLeftButton.Size;
+        
+
+        ApplyScalingForCurrentDpi();
+
         Resize += (_, _) =>
         {
             LayoutCornerButtons();
@@ -212,10 +225,15 @@ public partial class Form1 : Form
 
     protected override void WndProc(ref Message m)
     {
+        const int wmDpiChanged = 0x02E0;
         const int wmInput = 0x00FF;
         const int wmSettingChange = 0x001A;
         const int wmThemeChanged = 0x031A;
         const int wmDwmColorizationColorChanged = 0x0320;
+        if (m.Msg == wmDpiChanged)
+        {
+            ApplyScalingForCurrentDpi();
+        }
         if (m.Msg == wmInput)
         {
             EvaluateHotCorner(Cursor.Position);
@@ -226,6 +244,60 @@ public partial class Form1 : Form
         }
 
         base.WndProc(ref m);
+    }
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern int GetDpiForWindow(IntPtr hwnd);
+
+    private double GetCurrentScaleFactor()
+    {
+        try
+        {
+            if (IsHandleCreated)
+            {
+                var dpi = GetDpiForWindow(Handle);
+                if (dpi > 0)
+                {
+                    return dpi / 96.0;
+                }
+            }
+        }
+        catch
+        {
+            // fall through to fallback
+        }
+
+        using var g = CreateGraphics();
+        return g.DpiX / 96.0;
+    }
+
+    private void ApplyScalingForCurrentDpi()
+    {
+        var scale = GetCurrentScaleFactor();
+        if (Math.Abs(scale - _scaleFactor) < 0.01)
+        {
+            return;
+        }
+
+        _scaleFactor = scale;
+
+        if (_baseClientSize == Size.Empty)
+        {
+            _baseClientSize = ClientSize;
+        }
+
+        // Scale client size
+        ClientSize = new Size((int)Math.Round(_baseClientSize.Width * _scaleFactor), (int)Math.Round(_baseClientSize.Height * _scaleFactor));
+
+        // Scale corner buttons and monitor tile sizes
+        _monitorTile.Size = new Size((int)Math.Round(_baseMonitorTileSize.Width * _scaleFactor), (int)Math.Round(_baseMonitorTileSize.Height * _scaleFactor));
+        foreach (var b in new[] { _topLeftButton, _topRightButton, _bottomLeftButton, _bottomRightButton })
+        {
+            b.Size = new Size((int)Math.Round(_baseCornerButtonSize.Width * _scaleFactor), (int)Math.Round(_baseCornerButtonSize.Height * _scaleFactor));
+        }
+
+        LayoutCornerButtons();
+        UpdateFlyoutRegion();
     }
 
     private void SystemEventsOnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
@@ -259,7 +331,6 @@ public partial class Form1 : Form
         ThemeHelper.ApplyNativeWindowTheme(Handle);
         BackColor = ThemeHelper.Colors.GetFlyoutBackgroundColor();
         _monitorTile.AccentColor = accentColor;
-        _monitorTile.Font = ThemeHelper.Colors.GetFlyoutNumberFont();
         _countdownOverlay.RefreshTheme();
         UpdateTrayIcon();
         Invalidate(true);
@@ -344,15 +415,20 @@ public partial class Form1 : Form
 
     private void LayoutCornerButtons()
     {
-        _topLeftButton.Location = new Point(16, 17);
-        _topRightButton.Location = new Point(258, 17);
-        _monitorTile.Location = new Point((ClientSize.Width - _monitorTile.Width) / 2, 66);
+        var leftX = (int)Math.Round(16 * _scaleFactor);
+        var rightX = (int)Math.Round(258 * _scaleFactor);
+        var topY = (int)Math.Round(17 * _scaleFactor);
+        var monitorTop = (int)Math.Round(66 * _scaleFactor);
+
+        _topLeftButton.Location = new Point(leftX, topY);
+        _topRightButton.Location = new Point(rightX, topY);
+        _monitorTile.Location = new Point((ClientSize.Width - _monitorTile.Width) / 2, monitorTop);
 
         var topSectionGap = _monitorTile.Top - (_topLeftButton.Bottom);
         var bottomRowY = _monitorTile.Bottom + topSectionGap;
 
-        _bottomLeftButton.Location = new Point(16, bottomRowY);
-        _bottomRightButton.Location = new Point(258, bottomRowY);
+        _bottomLeftButton.Location = new Point(leftX, bottomRowY);
+        _bottomRightButton.Location = new Point(rightX, bottomRowY);
     }
 
     private void ApplySettings()
@@ -521,10 +597,34 @@ public partial class Form1 : Form
         }
     }
 
+    private void RestartApplication()
+    {
+        try
+        {
+            var startInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = Application.ExecutablePath,
+                WorkingDirectory = AppContext.BaseDirectory,
+                UseShellExecute = true
+            };
+            System.Diagnostics.Process.Start(startInfo);
+        }
+        catch
+        {
+            // ignore failures to start
+        }
+
+        // exit current process
+        Environment.Exit(0);
+    }
+
     private void HandleTrayMenuCommand(int commandId)
     {
         switch (commandId)
         {
+            case Win32PopupMenu.TrayCommandReload:
+                RestartApplication();
+                break;
             case Win32PopupMenu.TrayCommandToggleHotCorners:
                 _settings.HotCornersEnabled = !_settings.HotCornersEnabled;
                 ApplySettings();

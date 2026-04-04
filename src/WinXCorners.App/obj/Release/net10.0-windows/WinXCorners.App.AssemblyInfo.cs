@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("WinXCornersPlus")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.4.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.4.0+904dcda1b35fec6ab01a5f0ce51656b51fabcf41")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.4.0+75abca6098c6ea6e9589efda30585b562c65b9f0")]
 [assembly: System.Reflection.AssemblyProductAttribute("WinXCornersPlus")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WinXCornersPlus")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.4.0.0")]
