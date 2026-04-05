@@ -1,0 +1,51 @@
+{
+  "HotCornersEnabled": true,
+  "TopLeftActionId": "none",
+  "TopRightActionId": "none",
+  "BottomLeftActionId": "all-windows",
+  "BottomRightActionId": "action-center",
+  "StartWithWindows": true,
+  "IgnoreFullScreen": true,
+  "AlwaysRunAsAdministrator": false,
+  "AlwaysHideTrayIcon": false,
+  "FlyoutAnimationDirection": 2,
+  "GlobalDelayEnabled": false,
+  "GlobalDelayIndex": 3,
+  "TopLeftDelayEnabled": false,
+  "TopLeftDelayIndex": 3,
+  "TopRightDelayEnabled": false,
+  "TopRightDelayIndex": 3,
+  "BottomLeftDelayEnabled": false,
+  "BottomLeftDelayIndex": 3,
+  "BottomRightDelayEnabled": false,
+  "BottomRightDelayIndex": 3,
+  "ShowCountdown": false,
+  "EnableCustomCommands": false,
+  "CustomCommands": [
+    {
+      "Name": "",
+      "Command": "",
+      "Parameters": "",
+      "LaunchHidden": false
+    },
+    {
+      "Name": "",
+      "Command": "",
+      "Parameters": "",
+      "LaunchHidden": false
+    },
+    {
+      "Name": "",
+      "Command": "",
+      "Parameters": "",
+      "LaunchHidden": false
+    },
+    {
+      "Name": "",
+      "Command": "",
+      "Parameters": "",
+      "LaunchHidden": false
+    }
+  ],
+  "HotCornerModifierKey": 1
+}

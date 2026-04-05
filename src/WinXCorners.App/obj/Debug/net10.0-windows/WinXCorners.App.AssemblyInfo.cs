@@ -10,13 +10,14 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("WinXCornersPlus")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Asteski")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+65f7ec80370c90e2dc67873453db3902f51e1dbc")]
+[assembly: System.Reflection.AssemblyDescriptionAttribute("WinXCornersPlus")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.4.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.4.0+ba9a2bf8d4a9d73e3cb512d8f6cf5d5d9e29cea5")]
 [assembly: System.Reflection.AssemblyProductAttribute("WinXCornersPlus")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WinXCornersPlus")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.4.0.0")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
 

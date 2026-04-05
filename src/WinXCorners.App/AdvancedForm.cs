@@ -47,6 +47,9 @@ internal sealed class AdvancedForm : Form
     private bool _suppressDirtyTracking;
     private int _selectedTopSectionTab;
     private int _selectedCommandIndex = -1;
+    private double _scaleFactor = 1.0;
+    private Size _baseClientSize = Size.Empty;
+    private readonly Dictionary<Control, Rectangle> _baseControlBounds = new();
 
     private static readonly (string Text, FlyoutAnimationDirection Value)[] FlyoutAnimationDirections =
     [
@@ -64,7 +67,7 @@ internal sealed class AdvancedForm : Form
         Settings = settings.Clone();
         HandleCreated += (_, _) => ThemeHelper.ApplyNativeWindowTheme(Handle);
 
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleMode = AutoScaleMode.Dpi;
         ClientSize = new Size(438, 452);
         FormBorderStyle = FormBorderStyle.FixedSingle;
         MaximizeBox = false;
@@ -74,7 +77,7 @@ internal sealed class AdvancedForm : Form
         BackColor = ThemeHelper.Colors.GetSettingsBackgroundColor();
         ForeColor = ThemeHelper.Colors.GetForegroundColor();
         Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
-        Icon = WindowIconLoader.TryLoadSettingsIcon();
+        Icon = WindowIconLoader.TryLoadAppIcon();
 
         var updatesLink = new LinkLabel
         {
@@ -216,7 +219,7 @@ internal sealed class AdvancedForm : Form
             _chkShowCountdown
         ]);
 
-        _chkStartWithWindows = CreateCheckBox("Start WinXCornersPlus on startup", new Point(16, 19));
+        _chkStartWithWindows = CreateCheckBox("Run at startup", new Point(16, 19));
         _chkFullScreen = CreateCheckBox("Do nothing on Full Screen", new Point(16, 47));
         _chkAlwaysRunAsAdministrator = CreateCheckBox("Always run as administrator", new Point(16, 75));
         _chkAlwaysHideTrayIcon = CreateCheckBox("Always hide tray icon", new Point(16, 103));
@@ -238,14 +241,44 @@ internal sealed class AdvancedForm : Form
             FlatStyle = FlatStyle.Flat
         };
         _cbFlyoutAnimationDirection.Items.AddRange(FlyoutAnimationDirections.Select(static direction => direction.Text).ToArray());
-        _otherPanel.Controls.AddRange([
+        var lblHotCornerModifierKey = new Label
+        {
+            Text = "Hot Corners modifier key",
+            Location = new Point(228, 75),
+            AutoSize = true,
+            BackColor = Color.Transparent,
+            ForeColor = ThemeHelper.Colors.GetForegroundColor()
+        };
+
+        var cbHotCornerModifierKey = new ComboBox
+        {
+            Location = new Point(228, 99),
+            Size = new Size(150, 23),
+            DropDownStyle = ComboBoxStyle.DropDownList,
+            BackColor = ThemeHelper.Colors.GetControlBackgroundColor(),
+            ForeColor = ThemeHelper.Colors.GetForegroundColor(),
+            FlatStyle = FlatStyle.Flat
+        };
+
+        cbHotCornerModifierKey.Items.AddRange(new[] { "None", "Ctrl", "Shift", "Alt" });
+        cbHotCornerModifierKey.SelectedIndex = (int)_workingCopy.HotCornerModifierKey;
+        cbHotCornerModifierKey.SelectedIndexChanged += (_, _) =>
+        {
+            _workingCopy.HotCornerModifierKey = (ApplicationSettings.ModifierKey)cbHotCornerModifierKey.SelectedIndex;
+            MarkDirty(); // Enable the Apply button when the modifier key is changed
+        };
+
+        _otherPanel.Controls.AddRange(new Control[]
+        {
             _chkStartWithWindows,
             _chkFullScreen,
             _chkAlwaysRunAsAdministrator,
             _chkAlwaysHideTrayIcon,
             lblFlyoutAnimationDirection,
-            _cbFlyoutAnimationDirection
-        ]);
+            _cbFlyoutAnimationDirection,
+            lblHotCornerModifierKey,
+            cbHotCornerModifierKey
+        });
 
         _topSectionHost.Controls.AddRange([_delayPanel, _otherPanel]);
 
@@ -365,6 +398,15 @@ internal sealed class AdvancedForm : Form
         CancelButton = btnCancel;
         Controls.AddRange(new Control[] { updatesLink, betaLabel, btnOk, _btnApply, btnCancel, topTabsHost, _topSectionHost, tabsHost, customPanel });
 
+        // capture base bounds and font sizes for controls so we can scale positions/sizes/fonts at runtime
+        _baseClientSize = ClientSize;
+        foreach (var c in GetAllControls(this))
+        {
+            _baseControlBounds[c] = c.Bounds;
+        }
+
+        ApplyScalingForCurrentDpi();
+
         HookDirtyTracking();
 
         LoadFromSettings();
@@ -396,6 +438,90 @@ internal sealed class AdvancedForm : Form
         UpdateDelayState();
         _suppressDirtyTracking = false;
         SetDirty(false);
+    }
+
+    protected override void WndProc(ref Message m)
+    {
+        const int wmDpiChanged = 0x02E0;
+        if (m.Msg == wmDpiChanged)
+        {
+            ApplyScalingForCurrentDpi();
+        }
+
+        base.WndProc(ref m);
+    }
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern int GetDpiForWindow(IntPtr hwnd);
+
+    private double GetCurrentScaleFactor()
+    {
+        try
+        {
+            if (IsHandleCreated)
+            {
+                var dpi = GetDpiForWindow(Handle);
+                if (dpi > 0)
+                {
+                    return dpi / 96.0;
+                }
+            }
+        }
+        catch
+        {
+            // fallback
+        }
+
+        using var g = CreateGraphics();
+        return g.DpiX / 96.0;
+    }
+
+    private void ApplyScalingForCurrentDpi()
+    {
+        var scale = GetCurrentScaleFactor();
+        if (Math.Abs(scale - _scaleFactor) < 0.01)
+        {
+            return;
+        }
+
+        _scaleFactor = scale;
+
+        if (_baseClientSize == Size.Empty)
+        {
+            _baseClientSize = ClientSize;
+        }
+
+        ClientSize = new Size((int)Math.Round(_baseClientSize.Width * _scaleFactor), (int)Math.Round(_baseClientSize.Height * _scaleFactor));
+
+        // scale child controls positions and sizes proportionally (do not scale fonts)
+        foreach (var kvp in _baseControlBounds)
+        {
+            var control = kvp.Key;
+            var bounds = kvp.Value;
+            control.Bounds = new Rectangle(
+                (int)Math.Round(bounds.X * _scaleFactor),
+                (int)Math.Round(bounds.Y * _scaleFactor),
+                (int)Math.Round(bounds.Width * _scaleFactor),
+                (int)Math.Round(bounds.Height * _scaleFactor));
+        }
+    }
+
+    private static IEnumerable<Control> GetAllControls(Control root)
+    {
+        var list = new List<Control>();
+        var stack = new Stack<Control>();
+        stack.Push(root);
+        while (stack.Count > 0)
+        {
+            var c = stack.Pop();
+            list.Add(c);
+            foreach (Control child in c.Controls)
+            {
+                stack.Push(child);
+            }
+        }
+
+        return list;
     }
 
     private void SaveAndClose()
@@ -601,7 +727,6 @@ internal sealed class AdvancedForm : Form
 
         return 1;
     }
-
     private FlyoutAnimationDirection GetSelectedFlyoutAnimationDirection()
     {
         var selectedIndex = _cbFlyoutAnimationDirection.SelectedIndex;

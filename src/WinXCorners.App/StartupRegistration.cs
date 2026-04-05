@@ -24,10 +24,12 @@ internal static class StartupRegistration
 
         if (enabled)
         {
-            key.SetValue(ValueName, $"\"{Application.ExecutablePath}\"");
+            // Ensure only one correct entry is created
+            key.SetValue(ValueName, $"\"{Application.ExecutablePath}\"", RegistryValueKind.String);
             return;
         }
 
+        // Remove any existing entries to avoid duplicates
         if (key.GetValue(ValueName) is not null)
         {
             key.DeleteValue(ValueName, throwOnMissingValue: false);

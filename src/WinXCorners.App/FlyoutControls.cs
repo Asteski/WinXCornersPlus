@@ -92,7 +92,6 @@ internal sealed class FlyoutActionControl : Control
     protected override void OnPaint(PaintEventArgs e)
     {
         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
         ForeColor = ThemeHelper.Colors.GetFlyoutButtonForegroundColor();
 
         var fill = _pressed
@@ -101,13 +100,16 @@ internal sealed class FlyoutActionControl : Control
         var border = ThemeHelper.Colors.GetFlyoutBorderColor();
         var rect = new Rectangle(0, 0, Width - 1, Height - 1);
 
-        using var path = RoundedRectangleGeometry.CreatePath(rect, 5);
+        using var path = RoundedRectangleGeometry.CreatePath(rect, (int)Math.Max(1, 5 * (e.Graphics.DpiX / 96.0)));
         using var brush = new SolidBrush(fill);
         using var pen = new Pen(border);
         e.Graphics.FillPath(brush, path);
         e.Graphics.DrawPath(pen, path);
 
-        var textRect = new Rectangle(10, 0, Width - 34, Height);
+        var scale = e.Graphics.DpiX / 96.0;
+        var padLeft = (int)Math.Round(10 * scale);
+        var padRight = (int)Math.Round(34 * scale);
+        var textRect = new Rectangle(padLeft, 0, Width - padRight, Height);
         TextRenderer.DrawText(
             e.Graphics,
             Text,
@@ -116,14 +118,15 @@ internal sealed class FlyoutActionControl : Control
             ForeColor,
             TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
 
-        var arrowX = Width - 17;
-        var arrowY = (Height / 2) - 2;
-        using var arrowPen = new Pen(ThemeHelper.Colors.GetFlyoutButtonArrowColor(), 1.4f);
+        var arrowOffset = (int)Math.Round(17 * scale);
+        var arrowHalf = (int)Math.Round(5 * scale);
+        var arrowY = (Height / 2) - (int)Math.Round(2 * scale);
+        using var arrowPen = new Pen(ThemeHelper.Colors.GetFlyoutButtonArrowColor(), Math.Max(1f, (float)(1.4f * scale)));
         e.Graphics.DrawLines(arrowPen,
         [
-            new Point(arrowX - 5, arrowY),
-            new Point(arrowX, arrowY + 5),
-            new Point(arrowX + 5, arrowY)
+            new Point(Width - arrowOffset - arrowHalf, arrowY),
+            new Point(Width - arrowOffset, arrowY + (int)Math.Round(5 * scale)),
+            new Point(Width - arrowOffset + arrowHalf, arrowY)
         ]);
     }
 
@@ -189,9 +192,9 @@ internal sealed class AccentTileControl : Control
     {
         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
         e.Graphics.PixelOffsetMode = PixelOffsetMode.Half;
-
+        var scale = e.Graphics.DpiX / 96.0;
         var rect = new RectangleF(0.5f, 0.5f, Width - 1f, Height - 1f);
-        using var path = RoundedRectangleGeometry.CreatePath(rect, CornerRadius);
+        using var path = RoundedRectangleGeometry.CreatePath(rect, (int)Math.Max(1, CornerRadius * scale));
         using var brush = new SolidBrush(AccentColor);
         e.Graphics.FillPath(brush, path);
 
@@ -245,7 +248,7 @@ internal sealed class ToggleSwitchControl : Control
     protected override void OnPaint(PaintEventArgs e)
     {
         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
+        var scale = e.Graphics.DpiX / 96.0;
         var trackColor = Checked ? Color.FromArgb(0, 120, 215) : Color.FromArgb(166, 166, 166);
         using var trackBrush = new SolidBrush(trackColor);
         using var thumbBrush = new SolidBrush(Color.White);
@@ -255,8 +258,9 @@ internal sealed class ToggleSwitchControl : Control
         path.CloseFigure();
         e.Graphics.FillPath(trackBrush, path);
 
-        var thumbDiameter = Height - 8;
-        var thumbX = Checked ? Width - thumbDiameter - 4 : 4;
-        e.Graphics.FillEllipse(thumbBrush, thumbX, 4, thumbDiameter, thumbDiameter);
+        var thumbPadding = (int)Math.Round(4 * scale);
+        var thumbDiameter = Height - (int)Math.Round(8 * scale);
+        var thumbX = Checked ? Width - thumbDiameter - thumbPadding : thumbPadding;
+        e.Graphics.FillEllipse(thumbBrush, thumbX, thumbPadding, thumbDiameter, thumbDiameter);
     }
 }

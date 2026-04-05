@@ -56,6 +56,16 @@ internal sealed class ApplicationSettings
 
     public CustomCommandSettings[] CustomCommands { get; set; } = CreateDefaultCommands();
 
+    public enum ModifierKey
+    {
+        None,
+        Ctrl,
+        Shift,
+        Alt
+    }
+
+    public ModifierKey HotCornerModifierKey { get; set; } = ModifierKey.None;
+
     internal ApplicationSettings Clone()
     {
         return new ApplicationSettings
@@ -82,7 +92,8 @@ internal sealed class ApplicationSettings
             BottomRightDelayIndex = BottomRightDelayIndex,
             ShowCountdown = ShowCountdown,
             EnableCustomCommands = EnableCustomCommands,
-            CustomCommands = CustomCommands.Select(static command => command.Clone()).ToArray()
+            CustomCommands = CustomCommands.Select(static command => command.Clone()).ToArray(),
+            HotCornerModifierKey = HotCornerModifierKey
         };
     }
 

@@ -10,7 +10,7 @@ WinXCornersPlus is a lightweight utility for Windows 10 and Windows 11 that enha
     - **Hide Other Windows**: Minimize all windows and keep the currently focused window in view.
     - **Lock Screen**: Lock your screen.
     - **Notification Center**: Open the Notification Center.
-    - **Settings**: Open System Settings.
+    - **System Settings**: Open System Settings.
     - **Show All Windows**: Activate Windows Task View to manage your open applications.
     - **Show Desktop**: Minimize all windows to show the desktop.
     - **Start Menu**: Open the Start Menu.
@@ -26,6 +26,7 @@ WinXCornersPlus is a lightweight utility for Windows 10 and Windows 11 that enha
     - Set flyout animation direction.
     - Hide the tray icon persistently or run the application with elevated privileges.
     - Suppress actions while in full-screen mode.
+    - Trigger hot corners only while holding one of the modifier keys - control, shift or alt.
 
 3. **System Tray Integration**: WinXCornersPlus runs discreetly in the system tray, ensuring it doesn't clutter your desktop or Taskbar.
 
@@ -37,13 +38,13 @@ WinXCornersPlus is a lightweight utility for Windows 10 and Windows 11 that enha
 
 5. **Visible Countdown Counter**: Helps you, visually, to know if a corner action is about to be triggered.
 
-6. `[WIP]`~~**Windows 10/11 Theme aware**: Support for Windows 10 and 11 dark and light theme, so it will look like part of your OS.~~
+6. `[WIP]` **Windows 10/11 Theme aware**: Support for Windows 10 and 11 dark and light theme, so it will look like part of your OS.
 
 ## <a name="howto"></a> How To Use  <a href="#WinXCornersPlus"></a>
 1. Launch WinXCornersPlus popup window from the system tray icon.
 2. Configure your preferred actions for each corner.
 3. Hover your mouse cursor over a corner to trigger the assigned action.
-4. Right click the WinXCornersPlus tray icon and select *Settings* to open the more advanced options.
+4. Right click the WinXCornersPlus tray icon and select *Settings* to configure more advanced settings.
 
 ## <a name="howtohotkey"></a> Custom Hotkeys  <a href="#WinXCornersPlus"></a>
 The hotkeys will be as follows:
@@ -72,12 +73,13 @@ This will check if Alt+Tab's window is visible, if so, it will hide it, otherwis
 `#[MultitaskingViewFrame]:(escape)?(_control+_alt+tab)`
 
 ## Notes
+
 - WinXCornersPlus works seamlessly on your primary monitor but secondary monitors haven't been tested throughfully, consider it partially supported.
 - If you encounter issues with elevated privileges software, try restarting WinXCornersPlus as an administrator specially if you use those kind of elevated privileged software most of the time, otherwise triggering won't work due to the nature of separate privileges. Use *Elevate* option in tray context menu to restart the application into Administrator mode. Go to Settings and activate *Elevated* mode permanently in Advanced tab.
 - If you encounter other unknown issues, please fill a bug report at the GitHub issues page.
 
 ## Credits
 
-Original author and developer
+Original author and developer:
 
 * Victor Alberto Gil [@vhanla](https://apps.codigobit.info/) (Author, Developer)

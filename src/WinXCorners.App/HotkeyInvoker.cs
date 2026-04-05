@@ -5,6 +5,18 @@ namespace WinXCorners.App;
 internal static class HotkeyInvoker
 {
     private const uint KeyEventFKeyUp = 0x0002;
+    private const short KeyPressedMask = unchecked((short)0x8000);
+    private static readonly ushort[] ModifierVirtualKeys =
+    [
+        0xA0,
+        0xA1,
+        0xA2,
+        0xA3,
+        0xA4,
+        0xA5,
+        0x5B,
+        0x5C
+    ];
 
     private static readonly Dictionary<string, ushort> VirtualKeys = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -143,51 +155,119 @@ internal static class HotkeyInvoker
             return false;
         }
 
-        var tokens = hotkey.ToUpperInvariant().Split('+', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        var heldKeys = new List<ushort>();
+        AppLogger.Log($"HotkeyInvoker: Invoking hotkey '{hotkey}'.");
 
-        for (var repeat = 0; repeat < repeatCount; repeat++)
+        var tokens = hotkey
+            .Split('+', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Where(static token => token.Length > 0)
+            .ToArray();
+        if (tokens.Length == 0)
         {
-            foreach (var rawToken in tokens)
-            {
-                var isHoldDown = rawToken.StartsWith('_');
-                var isRelease = rawToken.EndsWith('_');
-                var token = rawToken.Trim('_');
-                if (!TryGetVirtualKey(token, out var virtualKey))
-                {
-                    continue;
-                }
-
-                if (isHoldDown && !isRelease)
-                {
-                    SendKey(virtualKey, false);
-                    heldKeys.Add(virtualKey);
-                }
-                else if (!isHoldDown && !isRelease)
-                {
-                    SendKey(virtualKey, false);
-                    Thread.Sleep(delay);
-                    SendKey(virtualKey, true);
-                }
-                else if (isRelease)
-                {
-                    heldKeys.Remove(virtualKey);
-                    SendKey(virtualKey, true);
-                }
-
-                Thread.Sleep(delay);
-            }
-
-            for (var index = heldKeys.Count - 1; index >= 0; index--)
-            {
-                SendKey(heldKeys[index], true);
-                Thread.Sleep(delay);
-            }
-
-            heldKeys.Clear();
+            AppLogger.Log($"HotkeyInvoker: No valid hotkey tokens found in '{hotkey}'.");
+            return false;
         }
 
+        var normalizedDelay = Math.Max(0, delay);
+        var iterations = Math.Max(1, repeatCount);
+        var suspendedModifiers = SuspendActiveModifiers();
+        try
+        {
+            for (var iteration = 0; iteration < iterations; iteration++)
+            {
+                var heldKeys = new List<ushort>();
+                try
+                {
+                    foreach (var token in tokens)
+                    {
+                        if (!TryParseKeyAction(token, out var virtualKey, out var holdKey, out var releaseKey))
+                        {
+                            AppLogger.Log($"HotkeyInvoker: Unknown hotkey token '{token}' in '{hotkey}'.");
+                            return false;
+                        }
+
+                        if (holdKey)
+                        {
+                            SendKey(virtualKey, keyUp: false);
+                            heldKeys.Add(virtualKey);
+                        }
+                        else if (releaseKey)
+                        {
+                            SendKey(virtualKey, keyUp: true);
+                            heldKeys.Remove(virtualKey);
+                        }
+                        else
+                        {
+                            SendKey(virtualKey, keyUp: false);
+                            if (normalizedDelay > 0)
+                            {
+                                Thread.Sleep(normalizedDelay);
+                            }
+
+                            SendKey(virtualKey, keyUp: true);
+                        }
+
+                        if (normalizedDelay > 0)
+                        {
+                            Thread.Sleep(normalizedDelay);
+                        }
+                    }
+                }
+                finally
+                {
+                    for (var heldIndex = heldKeys.Count - 1; heldIndex >= 0; heldIndex--)
+                    {
+                        SendKey(heldKeys[heldIndex], keyUp: true);
+                    }
+                }
+            }
+        }
+        finally
+        {
+            RestoreSuspendedModifiers(suspendedModifiers);
+        }
+
+        AppLogger.Log($"HotkeyInvoker: Successfully invoked hotkey '{hotkey}'.");
         return true;
+    }
+
+    private static List<ushort> SuspendActiveModifiers()
+    {
+        var suspendedModifiers = new List<ushort>();
+        foreach (var modifierVirtualKey in ModifierVirtualKeys)
+        {
+            if (!IsKeyDown(modifierVirtualKey))
+            {
+                continue;
+            }
+
+            SendKey(modifierVirtualKey, keyUp: true);
+            suspendedModifiers.Add(modifierVirtualKey);
+        }
+
+        return suspendedModifiers;
+    }
+
+    private static void RestoreSuspendedModifiers(IEnumerable<ushort> suspendedModifiers)
+    {
+        foreach (var modifierVirtualKey in suspendedModifiers)
+        {
+            SendKey(modifierVirtualKey, keyUp: false);
+        }
+    }
+
+    private static bool TryParseKeyAction(string token, out ushort virtualKey, out bool holdKey, out bool releaseKey)
+    {
+        holdKey = token.StartsWith('_');
+        releaseKey = token.EndsWith('_');
+
+        var normalizedToken = token.Trim('_');
+        if (normalizedToken.Length == 0)
+        {
+            virtualKey = 0;
+            return false;
+        }
+
+        return TryGetVirtualKey(normalizedToken.ToUpperInvariant(), out virtualKey);
     }
 
     private static bool TryGetVirtualKey(string token, out ushort virtualKey)
@@ -211,6 +291,11 @@ internal static class HotkeyInvoker
         return false;
     }
 
+    private static bool IsKeyDown(ushort virtualKey)
+    {
+        return (GetAsyncKeyState(virtualKey) & KeyPressedMask) != 0;
+    }
+
     private static void SendKey(ushort virtualKey, bool keyUp)
     {
         keybd_event((byte)virtualKey, (byte)MapVirtualKey(virtualKey, 0), keyUp ? KeyEventFKeyUp : 0, UIntPtr.Zero);
@@ -218,6 +303,9 @@ internal static class HotkeyInvoker
 
     [DllImport("user32.dll")]
     private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+
+    [DllImport("user32.dll")]
+    private static extern short GetAsyncKeyState(int vKey);
 
     [DllImport("user32.dll")]
     private static extern uint MapVirtualKey(uint uCode, uint uMapType);

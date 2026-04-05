@@ -29,7 +29,7 @@ partial class Form1
     private void InitializeComponent()
     {
         components = new System.ComponentModel.Container();
-        AutoScaleMode = AutoScaleMode.Font;
+        AutoScaleMode = AutoScaleMode.Dpi;
         ClientSize = new Size(360, 220);
         DoubleBuffered = true;
         Name = "Form1";

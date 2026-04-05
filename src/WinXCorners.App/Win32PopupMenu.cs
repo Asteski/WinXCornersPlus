@@ -5,6 +5,7 @@ namespace WinXCorners.App;
 internal static class Win32PopupMenu
 {
     internal const int TrayCommandToggleHotCorners = 1001;
+    internal const int TrayCommandReload = 1000;
     internal const int TrayCommandHideTray = 1002;
     internal const int TrayCommandElevate = 1003;
     internal const int TrayCommandAdvanced = 1004;
@@ -40,8 +41,9 @@ internal static class Win32PopupMenu
             AppendMenuW(menuHandle, MF_STRING, TrayCommandHideTray, "Hide tray");
             AppendMenuW(menuHandle, elevateFlags, TrayCommandElevate, elevateText);
             AppendMenuW(menuHandle, MF_SEPARATOR, 0, null);
-            AppendMenuW(menuHandle, MF_STRING, TrayCommandAdvanced, "Settings");
+            AppendMenuW(menuHandle, MF_STRING, TrayCommandReload, "Reload");
             AppendMenuW(menuHandle, MF_STRING, TrayCommandLogWindow, "Log Window");
+            AppendMenuW(menuHandle, MF_STRING, TrayCommandAdvanced, "Settings");
             AppendMenuW(menuHandle, MF_SEPARATOR, 0, null);
             AppendMenuW(menuHandle, MF_STRING, TrayCommandAbout, "About");
             AppendMenuW(menuHandle, MF_STRING, TrayCommandExit, "Exit");

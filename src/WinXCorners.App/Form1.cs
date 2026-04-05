@@ -14,6 +14,7 @@ public partial class Form1 : Form
     private const uint SwpNoMove = 0x0002;
     private const uint SwpNoActivate = 0x0010;
     private const uint SwpNoOwnerZOrder = 0x0200;
+    private const short KeyPressedMask = unchecked((short)0x8000);
 
     private enum FlyoutAnimationStyle
     {
@@ -68,6 +69,12 @@ public partial class Form1 : Form
     private TaskbarEdge _animationEdge = TaskbarEdge.Bottom;
     private bool _highResolutionTimerRequested;
     private bool _animationFrameQueued;
+    private bool _trayIconRefreshQueued;
+    private double _scaleFactor = 1.0;
+    private Size _baseClientSize = Size.Empty;
+    private Size _baseMonitorTileSize = Size.Empty;
+    private Size _baseCornerButtonSize = Size.Empty;
+    
 
     internal Form1(ApplicationSettings? initialSettings = null)
     {
@@ -174,6 +181,14 @@ public partial class Form1 : Form
             _monitorTile
         ]);
 
+        // Capture base sizes and fonts for later scaling
+        _baseClientSize = ClientSize;
+        _baseMonitorTileSize = _monitorTile.Size;
+        _baseCornerButtonSize = _topLeftButton.Size;
+        
+
+        ApplyScalingForCurrentDpi();
+
         Resize += (_, _) =>
         {
             LayoutCornerButtons();
@@ -211,10 +226,15 @@ public partial class Form1 : Form
 
     protected override void WndProc(ref Message m)
     {
+        const int wmDpiChanged = 0x02E0;
         const int wmInput = 0x00FF;
         const int wmSettingChange = 0x001A;
         const int wmThemeChanged = 0x031A;
         const int wmDwmColorizationColorChanged = 0x0320;
+        if (m.Msg == wmDpiChanged)
+        {
+            ApplyScalingForCurrentDpi();
+        }
         if (m.Msg == wmInput)
         {
             EvaluateHotCorner(Cursor.Position);
@@ -225,6 +245,60 @@ public partial class Form1 : Form
         }
 
         base.WndProc(ref m);
+    }
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern int GetDpiForWindow(IntPtr hwnd);
+
+    private double GetCurrentScaleFactor()
+    {
+        try
+        {
+            if (IsHandleCreated)
+            {
+                var dpi = GetDpiForWindow(Handle);
+                if (dpi > 0)
+                {
+                    return dpi / 96.0;
+                }
+            }
+        }
+        catch
+        {
+            // fall through to fallback
+        }
+
+        using var g = CreateGraphics();
+        return g.DpiX / 96.0;
+    }
+
+    private void ApplyScalingForCurrentDpi()
+    {
+        var scale = GetCurrentScaleFactor();
+        if (Math.Abs(scale - _scaleFactor) < 0.01)
+        {
+            return;
+        }
+
+        _scaleFactor = scale;
+
+        if (_baseClientSize == Size.Empty)
+        {
+            _baseClientSize = ClientSize;
+        }
+
+        // Scale client size
+        ClientSize = new Size((int)Math.Round(_baseClientSize.Width * _scaleFactor), (int)Math.Round(_baseClientSize.Height * _scaleFactor));
+
+        // Scale corner buttons and monitor tile sizes
+        _monitorTile.Size = new Size((int)Math.Round(_baseMonitorTileSize.Width * _scaleFactor), (int)Math.Round(_baseMonitorTileSize.Height * _scaleFactor));
+        foreach (var b in new[] { _topLeftButton, _topRightButton, _bottomLeftButton, _bottomRightButton })
+        {
+            b.Size = new Size((int)Math.Round(_baseCornerButtonSize.Width * _scaleFactor), (int)Math.Round(_baseCornerButtonSize.Height * _scaleFactor));
+        }
+
+        LayoutCornerButtons();
+        UpdateFlyoutRegion();
     }
 
     private void SystemEventsOnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
@@ -258,7 +332,6 @@ public partial class Form1 : Form
         ThemeHelper.ApplyNativeWindowTheme(Handle);
         BackColor = ThemeHelper.Colors.GetFlyoutBackgroundColor();
         _monitorTile.AccentColor = accentColor;
-        _monitorTile.Font = ThemeHelper.Colors.GetFlyoutNumberFont();
         _countdownOverlay.RefreshTheme();
         UpdateTrayIcon();
         Invalidate(true);
@@ -273,7 +346,7 @@ public partial class Form1 : Form
         var builtInItems = new List<(string text, string actionId)>
         {
             ("File Explorer", "file-explorer"),
-            ("Settings", "settings"),
+            ("System Settings", "settings"),
             ("Task Manager", "task-manager"),
             ("Show All Windows", "all-windows"),
             ("Show Desktop", "desktop"),
@@ -343,20 +416,26 @@ public partial class Form1 : Form
 
     private void LayoutCornerButtons()
     {
-        _topLeftButton.Location = new Point(16, 17);
-        _topRightButton.Location = new Point(258, 17);
-        _monitorTile.Location = new Point((ClientSize.Width - _monitorTile.Width) / 2, 66);
+        var leftX = (int)Math.Round(16 * _scaleFactor);
+        var rightX = (int)Math.Round(258 * _scaleFactor);
+        var topY = (int)Math.Round(17 * _scaleFactor);
+        var monitorTop = (int)Math.Round(66 * _scaleFactor);
+
+        _topLeftButton.Location = new Point(leftX, topY);
+        _topRightButton.Location = new Point(rightX, topY);
+        _monitorTile.Location = new Point((ClientSize.Width - _monitorTile.Width) / 2, monitorTop);
 
         var topSectionGap = _monitorTile.Top - (_topLeftButton.Bottom);
         var bottomRowY = _monitorTile.Bottom + topSectionGap;
 
-        _bottomLeftButton.Location = new Point(16, bottomRowY);
-        _bottomRightButton.Location = new Point(258, bottomRowY);
+        _bottomLeftButton.Location = new Point(leftX, bottomRowY);
+        _bottomRightButton.Location = new Point(rightX, bottomRowY);
     }
 
     private void ApplySettings()
     {
         UpdateCornerButtonLabels();
+        UpdateTrayIcon();
         UpdateTrayIconVisibility();
         SettingsStore.Save(_settings);
         UpdateAutorunRegistration();
@@ -397,11 +476,6 @@ public partial class Form1 : Form
 
     private void ShowCornerMenu(FlyoutActionControl source, bool preferAbove)
     {
-        if (!_settings.HotCornersEnabled)
-        {
-            return;
-        }
-
         var cornerItems = GetCornerMenuItems(_settings, GetCustomCommandDisplayName);
         var menuHeight = 8 + (cornerItems.Count * 24);
         var menuWidth = 220;
@@ -479,7 +553,7 @@ public partial class Form1 : Form
         {
             "none" => string.Empty,
             "file-explorer" => "File Explorer",
-            "settings" => "Settings",
+            "settings" => "System Settings",
             "task-manager" => "Task Manager",
             "screen-saver" => "Screen Saver",
             "hide-other-windows" => "Hide Windows",
@@ -519,13 +593,37 @@ public partial class Form1 : Form
         }
     }
 
+    private void RestartApplication()
+    {
+        try
+        {
+            var startInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = Application.ExecutablePath,
+                WorkingDirectory = AppContext.BaseDirectory,
+                UseShellExecute = true
+            };
+            System.Diagnostics.Process.Start(startInfo);
+        }
+        catch
+        {
+            // ignore failures to start
+        }
+
+        // exit current process
+        Environment.Exit(0);
+    }
+
     private void HandleTrayMenuCommand(int commandId)
     {
         switch (commandId)
         {
+            case Win32PopupMenu.TrayCommandReload:
+                RestartApplication();
+                break;
             case Win32PopupMenu.TrayCommandToggleHotCorners:
                 _settings.HotCornersEnabled = !_settings.HotCornersEnabled;
-                ApplySettings();
+                UpdateTrayIcon(); // Refresh tray icon after toggling HotCornersEnabled
                 break;
             case Win32PopupMenu.TrayCommandHideTray:
                 HideTrayIcon();
@@ -975,6 +1073,12 @@ public partial class Form1 : Form
             return;
         }
 
+        if (!IsModifierKeyHeld())
+        {
+            ResetHotCornerState();
+            return;
+        }
+
         var delay = HotCornerActions.GetDelay(_settings, area);
         var actionId = GetCornerActionId(area);
         if (string.IsNullOrWhiteSpace(actionId) || string.Equals(actionId, "none", StringComparison.Ordinal))
@@ -1026,6 +1130,23 @@ public partial class Form1 : Form
         _currentHotCornerArea = HotCornerArea.None;
         _hotCornerEnteredAtUtc = DateTime.MinValue;
         _hotCornerTriggered = false;
+    }
+
+    private bool IsModifierKeyHeld()
+    {
+        return _settings.HotCornerModifierKey switch
+        {
+            ApplicationSettings.ModifierKey.None => true,
+            ApplicationSettings.ModifierKey.Ctrl => IsKeyDown(Keys.ControlKey),
+            ApplicationSettings.ModifierKey.Shift => IsKeyDown(Keys.ShiftKey),
+            ApplicationSettings.ModifierKey.Alt => IsKeyDown(Keys.Menu),
+            _ => true
+        };
+    }
+
+    private static bool IsKeyDown(Keys key)
+    {
+        return (GetAsyncKeyState((int)key) & KeyPressedMask) != 0;
     }
 
     private static bool IsWithinLatchedCornerReleaseZone(Point cursor, HotCornerArea area, Rectangle bounds, int zone)
@@ -1165,22 +1286,47 @@ public partial class Form1 : Form
 
     private void UpdateTrayIcon()
     {
-        var resourceFileName = ThemeHelper.IsLightTheme ? "ICON_3.res" : "ICON_1.res";
-        var resourceIconName = ThemeHelper.IsLightTheme ? "ICON_3" : "ICON_1";
-        var iconPath = Path.Combine(AppContext.BaseDirectory, resourceFileName);
-        var loadedIcon = NativeIconResourceLoader.LoadIconFromResFile(iconPath, resourceIconName);
-        loadedIcon ??= LoadFallbackTrayIcon();
+        if (!IsHandleCreated || Disposing || IsDisposed)
+        {
+            ApplyTrayIcon();
+            return;
+        }
 
-        var previousIcon = _currentTrayIcon;
-        _currentTrayIcon = loadedIcon;
-        _notifyIcon.Icon = loadedIcon;
-        previousIcon?.Dispose();
+        if (_trayIconRefreshQueued)
+        {
+            return;
+        }
+
+        _trayIconRefreshQueued = true;
+        BeginInvoke(new Action(() =>
+        {
+            _trayIconRefreshQueued = false;
+
+            if (IsDisposed || Disposing)
+            {
+                return;
+            }
+
+            ApplyTrayIcon();
+        }));
     }
 
-    private static Icon LoadFallbackTrayIcon()
+    private void ApplyTrayIcon()
     {
-        var iconPath = Path.Combine(AppContext.BaseDirectory, "WinXCorners_Icon3.ico");
-        return File.Exists(iconPath) ? new Icon(iconPath) : SystemIcons.Application;
+        var loadedIcon = WindowIconLoader.TryLoadTrayIcon(ThemeHelper.IsLightTheme, _settings.HotCornersEnabled);
+        loadedIcon ??= WindowIconLoader.LoadFallbackTrayIcon();
+
+        var wasVisible = _notifyIcon.Visible;
+        var previousIcon = _currentTrayIcon;
+        _currentTrayIcon = loadedIcon;
+
+        // Explicitly reset the NotifyIcon properties to force a refresh
+        _notifyIcon.Visible = false;
+        _notifyIcon.Icon = null;
+        _notifyIcon.Icon = loadedIcon;
+        _notifyIcon.Visible = wasVisible;
+
+        previousIcon?.Dispose();
     }
 
     private void HideFlyoutIfNeeded()
@@ -1292,6 +1438,9 @@ public partial class Form1 : Form
     private static extern bool RegisterRawInputDevices(RawInputDevice[] rawInputDevices, uint numberOfDevices, uint sizeOfRawInputDevice);
 
     [DllImport("user32.dll", SetLastError = true)]
+    private static extern short GetAsyncKeyState(int vKey);
+
+    [DllImport("user32.dll", SetLastError = true)]
     private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
 
     [DllImport("winmm.dll")]
@@ -1299,5 +1448,4 @@ public partial class Form1 : Form
 
     [DllImport("winmm.dll")]
     private static extern uint timeEndPeriod(uint uPeriod);
-
 }
