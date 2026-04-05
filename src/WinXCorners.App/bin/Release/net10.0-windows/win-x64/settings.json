@@ -3,12 +3,12 @@
   "TopLeftActionId": "none",
   "TopRightActionId": "none",
   "BottomLeftActionId": "all-windows",
-  "BottomRightActionId": "start-menu",
+  "BottomRightActionId": "action-center",
   "StartWithWindows": true,
   "IgnoreFullScreen": true,
   "AlwaysRunAsAdministrator": false,
   "AlwaysHideTrayIcon": false,
-  "FlyoutAnimationDirection": 0,
+  "FlyoutAnimationDirection": 2,
   "GlobalDelayEnabled": false,
   "GlobalDelayIndex": 3,
   "TopLeftDelayEnabled": false,
@@ -46,5 +46,6 @@
       "Parameters": "",
       "LaunchHidden": false
     }
-  ]
+  ],
+  "HotCornerModifierKey": 1
 }

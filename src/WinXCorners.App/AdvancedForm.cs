@@ -241,14 +241,44 @@ internal sealed class AdvancedForm : Form
             FlatStyle = FlatStyle.Flat
         };
         _cbFlyoutAnimationDirection.Items.AddRange(FlyoutAnimationDirections.Select(static direction => direction.Text).ToArray());
-        _otherPanel.Controls.AddRange([
+        var lblHotCornerModifierKey = new Label
+        {
+            Text = "Hot Corner Modifier Key",
+            Location = new Point(228, 75),
+            AutoSize = true,
+            BackColor = Color.Transparent,
+            ForeColor = ThemeHelper.Colors.GetForegroundColor()
+        };
+
+        var cbHotCornerModifierKey = new ComboBox
+        {
+            Location = new Point(228, 99),
+            Size = new Size(150, 23),
+            DropDownStyle = ComboBoxStyle.DropDownList,
+            BackColor = ThemeHelper.Colors.GetControlBackgroundColor(),
+            ForeColor = ThemeHelper.Colors.GetForegroundColor(),
+            FlatStyle = FlatStyle.Flat
+        };
+
+        cbHotCornerModifierKey.Items.AddRange(new[] { "None", "Ctrl", "Shift", "Alt" });
+        cbHotCornerModifierKey.SelectedIndex = (int)_workingCopy.HotCornerModifierKey;
+        cbHotCornerModifierKey.SelectedIndexChanged += (_, _) =>
+        {
+            _workingCopy.HotCornerModifierKey = (ApplicationSettings.ModifierKey)cbHotCornerModifierKey.SelectedIndex;
+            MarkDirty(); // Enable the Apply button when the modifier key is changed
+        };
+
+        _otherPanel.Controls.AddRange(new Control[]
+        {
             _chkStartWithWindows,
             _chkFullScreen,
             _chkAlwaysRunAsAdministrator,
             _chkAlwaysHideTrayIcon,
             lblFlyoutAnimationDirection,
-            _cbFlyoutAnimationDirection
-        ]);
+            _cbFlyoutAnimationDirection,
+            lblHotCornerModifierKey,
+            cbHotCornerModifierKey
+        });
 
         _topSectionHost.Controls.AddRange([_delayPanel, _otherPanel]);
 

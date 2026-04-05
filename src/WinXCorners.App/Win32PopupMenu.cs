@@ -38,12 +38,12 @@ internal static class Win32PopupMenu
             var elevateFlags = MF_STRING | (isElevated ? MF_DISABLED | MF_GRAYED : 0);
 
             AppendMenuW(menuHandle, MF_STRING, TrayCommandToggleHotCorners, toggleHotCornersText);
-            AppendMenuW(menuHandle, MF_STRING, TrayCommandReload, "Reload");
             AppendMenuW(menuHandle, MF_STRING, TrayCommandHideTray, "Hide tray");
             AppendMenuW(menuHandle, elevateFlags, TrayCommandElevate, elevateText);
             AppendMenuW(menuHandle, MF_SEPARATOR, 0, null);
-            AppendMenuW(menuHandle, MF_STRING, TrayCommandAdvanced, "Settings");
+            AppendMenuW(menuHandle, MF_STRING, TrayCommandReload, "Reload");
             AppendMenuW(menuHandle, MF_STRING, TrayCommandLogWindow, "Log Window");
+            AppendMenuW(menuHandle, MF_STRING, TrayCommandAdvanced, "Settings");
             AppendMenuW(menuHandle, MF_SEPARATOR, 0, null);
             AppendMenuW(menuHandle, MF_STRING, TrayCommandAbout, "About");
             AppendMenuW(menuHandle, MF_STRING, TrayCommandExit, "Exit");

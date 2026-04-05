@@ -14,6 +14,7 @@ public partial class Form1 : Form
     private const uint SwpNoMove = 0x0002;
     private const uint SwpNoActivate = 0x0010;
     private const uint SwpNoOwnerZOrder = 0x0200;
+    private const short KeyPressedMask = unchecked((short)0x8000);
 
     private enum FlyoutAnimationStyle
     {
@@ -475,11 +476,6 @@ public partial class Form1 : Form
 
     private void ShowCornerMenu(FlyoutActionControl source, bool preferAbove)
     {
-        if (!_settings.HotCornersEnabled)
-        {
-            return;
-        }
-
         var cornerItems = GetCornerMenuItems(_settings, GetCustomCommandDisplayName);
         var menuHeight = 8 + (cornerItems.Count * 24);
         var menuWidth = 220;
@@ -627,7 +623,7 @@ public partial class Form1 : Form
                 break;
             case Win32PopupMenu.TrayCommandToggleHotCorners:
                 _settings.HotCornersEnabled = !_settings.HotCornersEnabled;
-                ApplySettings();
+                UpdateTrayIcon(); // Refresh tray icon after toggling HotCornersEnabled
                 break;
             case Win32PopupMenu.TrayCommandHideTray:
                 HideTrayIcon();
@@ -1077,6 +1073,12 @@ public partial class Form1 : Form
             return;
         }
 
+        if (!IsModifierKeyHeld())
+        {
+            ResetHotCornerState();
+            return;
+        }
+
         var delay = HotCornerActions.GetDelay(_settings, area);
         var actionId = GetCornerActionId(area);
         if (string.IsNullOrWhiteSpace(actionId) || string.Equals(actionId, "none", StringComparison.Ordinal))
@@ -1128,6 +1130,23 @@ public partial class Form1 : Form
         _currentHotCornerArea = HotCornerArea.None;
         _hotCornerEnteredAtUtc = DateTime.MinValue;
         _hotCornerTriggered = false;
+    }
+
+    private bool IsModifierKeyHeld()
+    {
+        return _settings.HotCornerModifierKey switch
+        {
+            ApplicationSettings.ModifierKey.None => true,
+            ApplicationSettings.ModifierKey.Ctrl => IsKeyDown(Keys.ControlKey),
+            ApplicationSettings.ModifierKey.Shift => IsKeyDown(Keys.ShiftKey),
+            ApplicationSettings.ModifierKey.Alt => IsKeyDown(Keys.Menu),
+            _ => true
+        };
+    }
+
+    private static bool IsKeyDown(Keys key)
+    {
+        return (GetAsyncKeyState((int)key) & KeyPressedMask) != 0;
     }
 
     private static bool IsWithinLatchedCornerReleaseZone(Point cursor, HotCornerArea area, Rectangle bounds, int zone)
@@ -1267,7 +1286,6 @@ public partial class Form1 : Form
 
     private void UpdateTrayIcon()
     {
-        AppLogger.Log($"UpdateTrayIcon called. HotCornersEnabled: {_settings.HotCornersEnabled}");
         if (!IsHandleCreated || Disposing || IsDisposed)
         {
             ApplyTrayIcon();
@@ -1296,9 +1314,6 @@ public partial class Form1 : Form
     private void ApplyTrayIcon()
     {
         var loadedIcon = WindowIconLoader.TryLoadTrayIcon(ThemeHelper.IsLightTheme, _settings.HotCornersEnabled);
-        var logMessage = $"Loaded icon: {(loadedIcon != null ? "Success" : "Fallback")}, Theme: {(ThemeHelper.IsLightTheme ? "Light" : "Dark")}, HotCornersEnabled: {_settings.HotCornersEnabled}";
-        File.AppendAllText("tray_icon_debug.log", logMessage + Environment.NewLine);
-        AppLogger.Log(logMessage);
         loadedIcon ??= WindowIconLoader.LoadFallbackTrayIcon();
 
         var wasVisible = _notifyIcon.Visible;
@@ -1421,6 +1436,9 @@ public partial class Form1 : Form
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern bool RegisterRawInputDevices(RawInputDevice[] rawInputDevices, uint numberOfDevices, uint sizeOfRawInputDevice);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern short GetAsyncKeyState(int vKey);
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);

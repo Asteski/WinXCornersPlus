@@ -357,4 +357,5 @@ internal static class ThemeHelper
     private static extern int SetWindowTheme(IntPtr hWnd, string? pszSubAppName, string? pszSubIdList);
 
     private const int DwmWindowAttributeUseImmersiveDarkMode = 20;
+
 }
