@@ -1,6 +1,5 @@
 # WinXCornersPlus
 
-## <a name="winxcornersplus"></a> WinXCornersPlus
 WinXCornersPlus is a lightweight utility for Windows 10 and Windows 11 that enhances your desktop experience by allowing you to assign custom actions triggered when you hover your mouse cursor over the corners of your main monitor. Whether you're a power user, developer, or just someone who appreciates efficiency, WinXCornersPlus provides a seamless way to streamline your workflow.
 
 ## <a name="features"></a> Key Features <a href="#winxcornersplus"></a>
