@@ -29,7 +29,7 @@ internal sealed class AboutForm : Form
 
         var descriptionLabel = new Label
         {
-            Text = "Version: v1.4.0\r\n\r\nCreated by Adam Kamienski\r\nOriginally developed by vhanla\r\n\r\n© 2026 Asteski, 2019 - 2024 vhanla\r\n\r\nhttps://github.com/Asteski\r\nhttps://github.com/vhanla",
+            Text = "Version: v1.4.0 (beta)\r\n\r\nCreated by Adam Kamienski\r\nOriginally developed by vhanla\r\n\r\n© 2026 Asteski, 2019 - 2024 vhanla\r\n\r\nhttps://github.com/Asteski\r\nhttps://github.com/vhanla",
             AutoSize = false,
             Location = new Point(20, 48),
             Size = new Size(190, 72), // Match link widths and allow the extra blank line

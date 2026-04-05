@@ -243,7 +243,7 @@ internal sealed class AdvancedForm : Form
         _cbFlyoutAnimationDirection.Items.AddRange(FlyoutAnimationDirections.Select(static direction => direction.Text).ToArray());
         var lblHotCornerModifierKey = new Label
         {
-            Text = "Hot Corner Modifier Key",
+            Text = "Hot Corners modifier key",
             Location = new Point(228, 75),
             AutoSize = true,
             BackColor = Color.Transparent,
