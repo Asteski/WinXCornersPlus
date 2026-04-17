@@ -4,7 +4,7 @@ WinXCornersPlus is a lightweight utility for Windows 10 and Windows 11 that enha
 
 ## <a name="features"></a> Key Features <a href="#winxcornersplus"></a>
 
-1. **Corner Actions**: Choose from a variety of predefined actions for each corner:
+1. **Hot Corner Actions**: Choose from a variety of predefined actions for each corner:
     - **Action Center**: Open the Action Center.
     - **File Explorer**: Open File Explorer window.
     - **Hide Other Windows**: Minimize all windows and keep the currently focused window in view.
